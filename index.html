@@ -1,1 +1,33 @@
-Hello World
+<html>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', () => {
+
+    const btn = document.getElementById('button-submit');
+    const inputImageUrl = document.getElementById('image-url');
+
+    btn.addEventListener('click', () => submit(inputImageUrl.value));
+
+    function submit(value) {
+      const http = new XMLHttpRequest()
+      http.setRequestHeader('Content-type', 'application/json');
+      http.open('POST', 'https://thiagoh-test.hf.space/display-image')
+      http.onreadystatechange = function () {//Call a function when the state changes.
+        if (http.readyState == 4 && http.status == 200) {
+          alert(http.responseText);
+        }
+      }
+      http.send(JSON.stringify({ imageUrl: value }));
+    }
+  });
+
+</script>
+
+<body>
+
+  <input type="url" id="image-url" />
+  <input type="button" id="button-submit" />
+</body>
+
+</html>
