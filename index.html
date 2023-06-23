@@ -11,8 +11,8 @@
 
     function submit(value) {
       const http = new XMLHttpRequest()
-      http.setRequestHeader('Content-type', 'application/json');
       http.open('POST', 'https://thiagoh-test.hf.space/display-image')
+      http.setRequestHeader('Content-type', 'application/json');
       http.onreadystatechange = function () {//Call a function when the state changes.
         if (http.readyState == 4 && http.status == 200) {
           alert(http.responseText);
@@ -26,8 +26,8 @@
 
 <body>
 
-  <input type="url" id="image-url" />
-  <input type="button" id="button-submit" />
+  <input type="url" id="image-url" placeholder="https://example.com/my-image.jpg" />
+  <input type="button" id="button-submit" value="Submit" />
 </body>
 
 </html>
