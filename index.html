@@ -17,6 +17,7 @@
     const btn = document.getElementById('button-submit');
     const inputImageUrl = document.getElementById('image-url');
     const imgOutput = document.getElementById('img-output');
+    const bearTypeOutput = document.getElementById('span-bear-type');
 
     btn.addEventListener('click', () => submit(inputImageUrl.value));
 
@@ -29,6 +30,7 @@
           console.log(http);
           const data = JSON.parse(http.responseText)
           imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
+          bearTypeOutput.innerHTML = `Type is ${data.prediction} with confidence ${data.probability}`;
         }
       }
       http.send(JSON.stringify({ imageUrl: value }));
@@ -45,6 +47,7 @@
   </div>
 
   <div>
+    <span id="span-bear-type"></span>
     <img id="img-output" />
   </div>
 </body>
