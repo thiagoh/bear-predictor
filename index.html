@@ -4,15 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
+  <title>Guess bear type</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <style>
-    html,
-    body {
-      font-family: monospace;
-    }
-
     #div-bear-type {
       font-family: sans-serif;
       font-size: 1.1em;
@@ -20,22 +15,12 @@
     }
 
     #div-image-output {
-      background-color: #ccc;
-      border-style: solid;
-      padding: 2px;
-      border-color: #777;
-      border-width: 2px;
       max-width: 800px;
       text-align: center;
     }
 
     #img-output {
       max-width: 800px;
-    }
-
-    input#image-url {
-      width: 500px;
-      padding: 1px 2px;
     }
   </style>
 
@@ -70,21 +55,31 @@
   </script>
 </head>
 
-<body>
+<body class="container">
 
-  <div id="div-input-fields">
-    Url:
-    <input type="url" id="image-url" placeholder="https://example.com/my-image.jpg" />
+  <h1>What's the bear?</h1>
+
+  <div id="div-input-fields" class="row">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Url</label>
+      <input type="url" id="image-url" class="form-control" placeholder="https://example.com/my-image.jpg" />
+    </div>
   </div>
 
-  <div>
-    <input type="button" id="button-submit" value="Submit" />
+  <div class="row">
+    <div class="col">
+      <input type="button" id="button-submit" class="btn btn-secondary" value="Submit" />
+    </div>
   </div>
 
-  <div>
-    <div id="div-bear-type"></div>
-    <div id="div-image-output">
-      <img id="img-output" />
+  <div class="row">
+    <div class="row">
+      <div id="div-bear-type" class="col"></div>
+    </div>
+    <div class="row">
+      <div id="div-image-output" class="col">
+        <img id="img-output" />
+      </div>
     </div>
   </div>
 </body>
