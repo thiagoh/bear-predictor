@@ -16,6 +16,7 @@
 
     const btn = document.getElementById('button-submit');
     const inputImageUrl = document.getElementById('image-url');
+    const imgOutput = document.getElementById('img-output');
 
     btn.addEventListener('click', () => submit(inputImageUrl.value));
 
@@ -25,7 +26,9 @@
       http.setRequestHeader('Content-type', 'application/json');
       http.onreadystatechange = function () {//Call a function when the state changes.
         if (http.readyState == 4 && http.status == 200) {
-          alert(http.responseText);
+          console.log(http);
+          const data = JSON.parse(http.responseText)
+          imgOutput.src = data.imageEncodedBytes;
         }
       }
       http.send(JSON.stringify({ imageUrl: value }));
@@ -36,8 +39,14 @@
 
 <body>
 
-  <input type="url" id="image-url" placeholder="https://example.com/my-image.jpg" />
-  <input type="button" id="button-submit" value="Submit" />
+  <div>
+    <input type="url" id="image-url" placeholder="https://example.com/my-image.jpg" />
+    <input type="button" id="button-submit" value="Submit" />
+  </div>
+
+  <div>
+    <img id="img-output" />
+  </div>
 </body>
 
 </html>
