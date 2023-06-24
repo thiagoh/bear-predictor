@@ -28,7 +28,7 @@
         if (http.readyState == 4 && http.status == 200) {
           console.log(http);
           const data = JSON.parse(http.responseText)
-          imgOutput.src = data.imageEncodedBytes;
+          imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
         }
       }
       http.send(JSON.stringify({ imageUrl: value }));
