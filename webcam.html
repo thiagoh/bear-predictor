@@ -32,20 +32,34 @@
       </div>
     </div>
     <div class="row mb-3">
-      <div class="col">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="grayscale-check">
-          <label class="form-check-label" for="grayscale-check">
-            GrayScale
-          </label>
-        </div>
+      <div class="col-3">
+        <label for="actions" class="form-label">Options</label>
+        <ul id="options" class="list-group">
+          <li class="list-group-item">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="grayscale-check">
+              <label class="form-check-label" for="grayscale-check">
+                GrayScale
+              </label>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="spacebar-for-photo-check">
+              <label class="form-check-label" for="spacebar-for-photo-check">
+                SpaceBar for photo
+              </label>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
 
     <div class="row">
       <div class="mb-3 col">
-        <input type="button" id="button-submit" class="btn btn-secondary" value="Start session" />
+        <!-- <input type="button" id="button-submit" class="btn btn-secondary" value="Start session" /> -->
         <input type="button" id="button-clear" class="btn btn-secondary" value="Clear session" />
+        <input type="button" id="button-download-all" class="btn btn-danger" value="Download all photos" />
       </div>
     </div>
 

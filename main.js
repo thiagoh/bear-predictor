@@ -93,6 +93,12 @@
       // photo.setAttribute('src', data);
     }
 
+    function downloadAllPhotos() {
+      Array.prototype.slice.call(document.querySelectorAll('a.anchor-photo-card'), 0).forEach((a, i) => {
+        setTimeout(() => a.click(), i++ * 200);
+      });
+    }
+
     // Capture a photo by fetching the current contents of the video
     // and drawing it into a canvas, then converting that to a PNG
     // format data URL. By drawing it on an offscreen canvas and then
@@ -125,15 +131,17 @@
       cell.className = 'col-4 align-self-start';
 
       const anchor = document.createElement('a');
+      anchor.className = 'anchor-photo-card';
       anchor.href = data;
       anchor.download = `${currentPrefix}${Utils.uuid()}_${currentLabel}`;
       anchor.appendChild(photo);
       cell.appendChild(anchor);
-      photoOutput.appendChild(cell);
+      photoOutput.prepend(cell);
     }
 
     function startSession() {}
     function clearSession() {
+      imageLabel.value = '';
       photoOutput.innerHTML = '';
     }
 
@@ -145,11 +153,11 @@
     const canvas = document.getElementById('canvas');
     const startSessionButton = document.getElementById('button-submit');
     const clearSessionButton = document.getElementById('button-clear');
+    const downloadAllButton = document.getElementById('button-download-all');
     const takePhotoButton = document.getElementById('startbutton');
     const grayScaleCheck = document.getElementById('grayscale-check');
+    const spacebarForPhotoCheck = document.getElementById('spacebar-for-photo-check');
     const photoOutput = document.getElementById('photo-output');
-    const photo = document.getElementById('photo');
-    const photoBytes = document.getElementById('photo_bytes');
     const imageLabel = document.getElementById('image-label');
     const currentCaptureInterval = document.getElementById('current-capture-interval');
     const captureInterval = document.getElementById('capture-interval');
@@ -157,8 +165,17 @@
     updateCurrentCaptureInterval();
 
     captureInterval.addEventListener('change', updateCurrentCaptureInterval);
-    startSessionButton.addEventListener('click', startSession);
+    startSessionButton && startSessionButton.addEventListener('click', startSession);
     clearSessionButton.addEventListener('click', clearSession);
+    downloadAllButton.addEventListener('click', downloadAllPhotos);
+
+    document.body.addEventListener('keypress', event => {
+      console.log('activeElement: ', document.activeElement);
+      if (document.activeElement === document.body && spacebarForPhotoCheck.checked === true && event.code === 'Space') {
+        takeNewPhoto();
+        event.preventDefault();
+      }
+    });
 
     initCam();
   }
