@@ -56,7 +56,7 @@
 
       video.addEventListener(
         'canplay',
-        ev => {
+        event => {
           if (!streaming) {
             height = video.videoHeight / (video.videoWidth / width);
 
@@ -128,18 +128,70 @@
       photo.setAttribute('src', data);
 
       const cell = document.createElement('div');
-      cell.className = 'col-4 align-self-start';
+      cell.className = 'col-4 position-relative align-self-start';
 
       const anchor = document.createElement('a');
       anchor.className = 'anchor-photo-card';
       anchor.href = data;
       anchor.download = `${currentPrefix}${Utils.uuid()}_${currentLabel}`;
       anchor.appendChild(photo);
+      const photoDeleteIcon = document.createElement('div');
+      photoDeleteIcon.innerHTML = 'X';
+      photoDeleteIcon.className = 'photo-delete position-absolute top-0 end-0 mt-2';
+      cell.addEventListener('mousemove', event => {
+        if (event.shiftKey) {
+          cell.appendChild(photoDeleteIcon);
+        } else {
+          if (cell.contains(photoDeleteIcon)) {
+            cell.removeChild(photoDeleteIcon);
+          }
+        }
+      });
+      cell.addEventListener('mouseover', event => {
+        if (event.shiftKey) {
+          cell.appendChild(photoDeleteIcon);
+        } else {
+          if (cell.contains(photoDeleteIcon)) {
+            cell.removeChild(photoDeleteIcon);
+          }
+        }
+      });
+      cell.addEventListener('mouseout', event => {
+        if (cell.contains(photoDeleteIcon)) {
+          cell.removeChild(photoDeleteIcon);
+        }
+      });
+      anchor.addEventListener('click', event => {
+        if (event.shiftKey) {
+          cell.remove();
+          event.preventDefault();
+        }
+      });
       cell.appendChild(anchor);
       photoOutput.prepend(cell);
     }
 
-    function startSession() {}
+    let photoSessionIntervalHandler;
+    function startStopSession() {
+      if (startStopSession.sessionIsRunning) {
+        stopSession();
+        startStopSession.sessionIsRunning = false;
+      } else {
+        startSession();
+        startStopSession.sessionIsRunning = true;
+      }
+    }
+    function startSession() {
+      const currentCaptureInterval = Math.max(1, parseInt(currentCaptureIntervalRange.value) || 1);
+      photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
+      photoSessionIntervalHandler = setInterval(() => takeNewPhoto(), currentCaptureInterval * 1000);
+      startSessionButton.value = 'Stop Session';
+    }
+
+    function stopSession() {
+      photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
+      startSessionButton.value = 'Start Session';
+    }
     function clearSession() {
       imageLabel.value = '';
       photoOutput.innerHTML = '';
@@ -151,7 +203,7 @@
 
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
-    const startSessionButton = document.getElementById('button-submit');
+    const startSessionButton = document.getElementById('button-start-session');
     const clearSessionButton = document.getElementById('button-clear');
     const downloadAllButton = document.getElementById('button-download-all');
     const takePhotoButton = document.getElementById('startbutton');
@@ -159,13 +211,13 @@
     const spacebarForPhotoCheck = document.getElementById('spacebar-for-photo-check');
     const photoOutput = document.getElementById('photo-output');
     const imageLabel = document.getElementById('image-label');
-    const currentCaptureInterval = document.getElementById('current-capture-interval');
+    const currentCaptureIntervalRange = document.getElementById('current-capture-interval');
     const captureInterval = document.getElementById('capture-interval');
-    const updateCurrentCaptureInterval = () => (currentCaptureInterval.innerHTML = `${captureInterval.value}(s)`);
+    const updateCurrentCaptureInterval = () => (currentCaptureIntervalRange.innerHTML = `${captureInterval.value}(s)`);
     updateCurrentCaptureInterval();
 
     captureInterval.addEventListener('change', updateCurrentCaptureInterval);
-    startSessionButton && startSessionButton.addEventListener('click', startSession);
+    startSessionButton.addEventListener('click', startStopSession);
     clearSessionButton.addEventListener('click', clearSession);
     downloadAllButton.addEventListener('click', downloadAllPhotos);
 
