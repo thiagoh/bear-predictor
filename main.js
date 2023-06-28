@@ -128,37 +128,37 @@
       photo.setAttribute('src', data);
 
       const cell = document.createElement('div');
-      cell.className = 'col-4 position-relative align-self-start';
+      cell.className = 'col-4 align-self-start';
 
       const anchor = document.createElement('a');
-      anchor.className = 'anchor-photo-card';
+      anchor.className = 'anchor-photo-card d-inline-block position-relative';
       anchor.href = data;
       anchor.download = `${currentPrefix}${Utils.uuid()}_${currentLabel}`;
       anchor.appendChild(photo);
       const photoDeleteIcon = document.createElement('div');
       photoDeleteIcon.innerHTML = 'X';
-      photoDeleteIcon.className = 'photo-delete position-absolute top-0 end-0 mt-2';
-      cell.addEventListener('mousemove', event => {
+      photoDeleteIcon.className = 'photo-delete position-absolute top-0 end-0 m-2';
+      anchor.addEventListener('mousemove', event => {
         if (event.shiftKey) {
-          cell.appendChild(photoDeleteIcon);
+          anchor.appendChild(photoDeleteIcon);
         } else {
-          if (cell.contains(photoDeleteIcon)) {
-            cell.removeChild(photoDeleteIcon);
+          if (anchor.contains(photoDeleteIcon)) {
+            anchor.removeChild(photoDeleteIcon);
           }
         }
       });
-      cell.addEventListener('mouseover', event => {
+      anchor.addEventListener('mouseover', event => {
         if (event.shiftKey) {
-          cell.appendChild(photoDeleteIcon);
+          anchor.appendChild(photoDeleteIcon);
         } else {
-          if (cell.contains(photoDeleteIcon)) {
-            cell.removeChild(photoDeleteIcon);
+          if (anchor.contains(photoDeleteIcon)) {
+            anchor.removeChild(photoDeleteIcon);
           }
         }
       });
-      cell.addEventListener('mouseout', event => {
-        if (cell.contains(photoDeleteIcon)) {
-          cell.removeChild(photoDeleteIcon);
+      anchor.addEventListener('mouseout', event => {
+        if (anchor.contains(photoDeleteIcon)) {
+          anchor.removeChild(photoDeleteIcon);
         }
       });
       anchor.addEventListener('click', event => {
