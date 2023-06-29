@@ -53,16 +53,13 @@
     }
 
     function initCam() {
+      // https://simpl.info/getusermedia/sources/
+      // https://github.com/samdutton/simpl/blob/gh-pages/getusermedia/sources/js/main.js
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: false })
         .then((stream) => {
           video.srcObject = stream;
           video.play();
-          // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
-          // See crbug.com/110938.
-          video.onloadedmetadata = function (e) {
-            // Ready to go. Do some stuff.
-          };
         })
         .catch((err) => {
           console.error(`An error occurred: ${err}`);
