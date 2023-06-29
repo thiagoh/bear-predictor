@@ -1,5 +1,14 @@
 (() => {
   function startup() {
+    function hasGetUserMedia() {
+      return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
+    }
+    if (hasGetUserMedia()) {
+      // Good to go!
+    } else {
+      alert('getUserMedia() is not supported in your browser');
+      throw Error('getUserMedia() is not supported in your browser');
+    }
     // The width and height of the captured photo. We will set the
     // width to the value defined here, but the height will be
     // calculated based on the aspect ratio of the input stream.
@@ -46,17 +55,22 @@
     function initCam() {
       navigator.mediaDevices
         .getUserMedia({ video: true, audio: false })
-        .then(stream => {
+        .then((stream) => {
           video.srcObject = stream;
           video.play();
+          // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+          // See crbug.com/110938.
+          video.onloadedmetadata = function (e) {
+            // Ready to go. Do some stuff.
+          };
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(`An error occurred: ${err}`);
         });
 
       video.addEventListener(
         'canplay',
-        event => {
+        (event) => {
           if (!streaming) {
             height = video.videoHeight / (video.videoWidth / width);
 
@@ -74,7 +88,7 @@
             streaming = true;
           }
         },
-        false
+        false,
       );
       // takePhotoButton.addEventListener('click', takePicture);
       takePhotoButton.addEventListener('click', takeNewPhoto);
@@ -99,6 +113,7 @@
       });
     }
 
+    let numberOfPhotos = 0;
     // Capture a photo by fetching the current contents of the video
     // and drawing it into a canvas, then converting that to a PNG
     // format data URL. By drawing it on an offscreen canvas and then
@@ -108,6 +123,7 @@
       const currentPrefix = prefix.value.trim();
       const currentLabel = imageLabel.value.trim();
       if (!currentLabel) {
+        imageLabel.classList.add('is-invalid');
         throw new Error('Label is not defined');
       }
 
@@ -128,7 +144,7 @@
       photo.setAttribute('src', data);
 
       const cell = document.createElement('div');
-      cell.className = 'col-4 align-self-start';
+      cell.className = 'col-xl-4 col-md-6 align-self-start';
 
       const anchor = document.createElement('a');
       anchor.className = 'anchor-photo-card d-inline-block position-relative';
@@ -138,7 +154,7 @@
       const photoDeleteIcon = document.createElement('div');
       photoDeleteIcon.innerHTML = 'X';
       photoDeleteIcon.className = 'photo-delete position-absolute top-0 end-0 m-2';
-      anchor.addEventListener('mousemove', event => {
+      anchor.addEventListener('mousemove', (event) => {
         if (event.shiftKey) {
           anchor.appendChild(photoDeleteIcon);
         } else {
@@ -147,7 +163,7 @@
           }
         }
       });
-      anchor.addEventListener('mouseover', event => {
+      anchor.addEventListener('mouseover', (event) => {
         if (event.shiftKey) {
           anchor.appendChild(photoDeleteIcon);
         } else {
@@ -156,12 +172,12 @@
           }
         }
       });
-      anchor.addEventListener('mouseout', event => {
+      anchor.addEventListener('mouseout', (event) => {
         if (anchor.contains(photoDeleteIcon)) {
           anchor.removeChild(photoDeleteIcon);
         }
       });
-      anchor.addEventListener('click', event => {
+      anchor.addEventListener('click', (event) => {
         if (event.shiftKey) {
           cell.remove();
           event.preventDefault();
@@ -169,32 +185,46 @@
       });
       cell.appendChild(anchor);
       photoOutput.prepend(cell);
+
+      numberOfPhotos = (numberOfPhotos || 0) + 1;
+      numberOfPhotosSpan.innerHTML = numberOfPhotos;
     }
 
     let photoSessionIntervalHandler;
     function startStopSession() {
       if (startStopSession.sessionIsRunning) {
         stopSession();
-        startStopSession.sessionIsRunning = false;
       } else {
         startSession();
-        startStopSession.sessionIsRunning = true;
       }
     }
     function startSession() {
       const currentCaptureInterval = Math.max(1, parseInt(currentCaptureIntervalRange.value) || 1);
       photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
-      photoSessionIntervalHandler = setInterval(() => takeNewPhoto(), currentCaptureInterval * 1000);
+      photoSessionIntervalHandler = setInterval(() => {
+        try {
+          takeNewPhoto();
+        } catch (e) {
+          stopSession();
+          console.error(e);
+        }
+      }, currentCaptureInterval * 1000);
       startSessionButton.value = 'Stop Session';
+      startStopSession.sessionIsRunning = true;
     }
 
     function stopSession() {
       photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
       startSessionButton.value = 'Start Session';
+      startStopSession.sessionIsRunning = false;
     }
     function clearSession() {
+      stopSession();
+      numberOfPhotos = 0;
       imageLabel.value = '';
       photoOutput.innerHTML = '';
+      numberOfPhotosSpan.innerHTML = `${numberOfPhotos}`;
+      clearImageLabelValidation();
     }
 
     if (showViewLiveResultButton()) {
@@ -212,17 +242,20 @@
     const photoOutput = document.getElementById('photo-output');
     const imageLabel = document.getElementById('image-label');
     const currentCaptureIntervalRange = document.getElementById('current-capture-interval');
+    const numberOfPhotosSpan = document.getElementById('number-of-photos');
     const captureInterval = document.getElementById('capture-interval');
     const updateCurrentCaptureInterval = () => (currentCaptureIntervalRange.innerHTML = `${captureInterval.value}(s)`);
     updateCurrentCaptureInterval();
 
+    const clearImageLabelValidation = () => imageLabel.classList.remove('is-invalid');
+    imageLabel.addEventListener('change', clearImageLabelValidation);
+    imageLabel.addEventListener('keyup', clearImageLabelValidation);
     captureInterval.addEventListener('change', updateCurrentCaptureInterval);
     startSessionButton.addEventListener('click', startStopSession);
     clearSessionButton.addEventListener('click', clearSession);
     downloadAllButton.addEventListener('click', downloadAllPhotos);
 
-    document.body.addEventListener('keypress', event => {
-      console.log('activeElement: ', document.activeElement);
+    document.body.addEventListener('keypress', (event) => {
       if (document.activeElement === document.body && spacebarForPhotoCheck.checked === true && event.code === 'Space') {
         takeNewPhoto();
         event.preventDefault();
