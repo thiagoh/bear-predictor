@@ -3,6 +3,10 @@
     return new Promise((resolve) => {
       const reader = new FileReader();
 
+      reader.addEventListener('loadstart', () => console.log('load start'));
+      reader.addEventListener('load', () => console.log('load'));
+      reader.addEventListener('loadend', () => console.log('load end'));
+
       reader.addEventListener('load', () => {
         resolve(reader.result);
       });
@@ -19,12 +23,20 @@
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('button-submit');
     const inputImageUrl = document.getElementById('image-url');
+    const inputImageFile = document.getElementById('image-file');
     const imgOutput = document.getElementById('img-output');
     const bearTypeOutput = document.getElementById('div-bear-type');
+    let fileData;
+    inputImageFile.addEventListener('change', () => {
+      console.log('files:', inputImageFile.files[0]);
+      getDataUrl(inputImageFile.files[0]).then((data) => {
+        console.log('File data: ', data);
+        fileData = data;
+      });
+    });
+    btn.addEventListener('click', () => submit(fileData));
 
-    btn.addEventListener('click', () => submit(inputImageUrl.value));
-
-    function submit(value) {
+    const submit = (fileData) => {
       const http = new XMLHttpRequest();
       http.open('POST', 'https://thiagoh-test.hf.space/predict-finger');
       http.setRequestHeader('Content-type', 'application/json');
@@ -34,11 +46,11 @@
           console.log(http);
           const data = JSON.parse(http.responseText);
           // imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
-          imgOutput.src = value;
+          imgOutput.src = fileData;
           bearTypeOutput.innerHTML = `Type is ${data.prediction} with confidence ${data.probability}`;
         }
       };
-      http.send(JSON.stringify({ imageUrl: value }));
-    }
+      http.send(JSON.stringify({ imageEncodedBytes: fileData }));
+    };
   });
 })();
