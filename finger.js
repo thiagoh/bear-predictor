@@ -36,7 +36,7 @@
     });
     btn.addEventListener('click', () => submit(fileData));
 
-    const submit = (fileData) => {
+    const submit = (dataAsUrl) => {
       const http = new XMLHttpRequest();
       http.open('POST', 'https://thiagoh-test.hf.space/predict-finger');
       http.setRequestHeader('Content-type', 'application/json');
@@ -46,11 +46,13 @@
           console.log(http);
           const data = JSON.parse(http.responseText);
           // imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
-          imgOutput.src = fileData;
+          imgOutput.src = dataAsUrl;
           bearTypeOutput.innerHTML = `Type is ${data.prediction} with confidence ${data.probability}`;
         }
       };
-      http.send(JSON.stringify({ imageEncodedBytes: fileData }));
+      const len = 'base64,'.length;
+      const bytes = dataAsUrl.substring(dataAsUrl.indexOf('base64,') + len)
+      http.send(JSON.stringify({ imageEncodedBytes: bytes }));
     };
   });
 })();
