@@ -14,13 +14,14 @@
 
 <body>
   <div class="container-lg contentarea">
+    <h1>WebCam capture</h1>
     <div class="row mb-3">
       <div class="col-md-4">
-        <label for="prefix" class="form-label">Prefix</label>
-        <input id="prefix" type="text" class="form-control" placeholder="image-, etc." />
+        <label for="image-prefix" class="form-label">Image prefix</label>
+        <input id="image-prefix" type="text" class="form-control" placeholder="image-, etc." />
       </div>
       <div class="col-md-4">
-        <label for="image-label" class="form-label">Label</label>
+        <label for="image-label" class="form-label">Image label (suffix)</label>
         <div class="input-group has-validation">
           <input id="image-label" type="text" class="form-control" placeholder="LABEL_A, LABEL_B, etc." />
           <div class="invalid-feedback">
@@ -34,6 +35,12 @@
           <span id="current-capture-interval"></span>
         </label>
         <input id="capture-interval" type="range" class="form-range" min="0.25" max="10" value="2" step="0.25" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-8">
+        <label for="image-name-example" class="form-label">Image name example</label>
+        <input id="image-name-example" class="form-control" type="text" readonly disabled>
       </div>
     </div>
     <div class="row mb-3">

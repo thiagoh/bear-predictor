@@ -125,8 +125,7 @@
     // drawing that to the screen, we can change its size and/or apply
     // other changes before drawing it.
     function takeNewPhoto() {
-      const currentPrefix = prefix.value.trim();
-      const currentLabel = imageLabel.value.trim();
+      const currentLabel =  getImageLabel();
       if (!currentLabel) {
         imageLabel.classList.add('is-invalid');
         throw new Error('Label is not defined');
@@ -154,7 +153,7 @@
       const anchor = document.createElement('a');
       anchor.className = 'anchor-photo-card d-inline-block position-relative';
       anchor.href = data;
-      anchor.download = `${currentPrefix}${Utils.uuid()}_${currentLabel}`;
+      anchor.download = createImageName(Utils.uuid());
       anchor.appendChild(photo);
       const photoDeleteIcon = document.createElement('div');
       photoDeleteIcon.innerHTML = 'X';
@@ -205,7 +204,8 @@
     }
     const MIN_INTERVAL_IN_SECONDS = 0.25;
     function startSession() {
-      const currentCaptureInterval = Math.max(MIN_INTERVAL_IN_SECONDS, parseFloat(currentCaptureIntervalRange.value) || MIN_INTERVAL_IN_SECONDS) * 1000;
+      const currentCaptureInterval =
+        Math.max(MIN_INTERVAL_IN_SECONDS, parseFloat(currentCaptureIntervalRange.value) || MIN_INTERVAL_IN_SECONDS) * 1000;
       photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
       photoSessionIntervalHandler = setInterval(() => {
         try {
@@ -246,17 +246,54 @@
     const grayScaleCheck = document.getElementById('grayscale-check');
     const spacebarForPhotoCheck = document.getElementById('spacebar-for-photo-check');
     const photoOutput = document.getElementById('photo-output');
+    const imagePrefix = document.getElementById('image-prefix');
     const imageLabel = document.getElementById('image-label');
     const currentCaptureIntervalRange = document.getElementById('capture-interval');
     const currentCaptureIntervalView = document.getElementById('current-capture-interval');
+    const imageNameExample = document.getElementById('image-name-example');
     const numberOfPhotosSpan = document.getElementById('number-of-photos');
     const captureInterval = document.getElementById('capture-interval');
     const updateCurrentCaptureInterval = () => (currentCaptureIntervalView.innerHTML = `${captureInterval.value}(s)`);
     updateCurrentCaptureInterval();
 
+    const getImagePrefix = () => {
+      let prefix = imagePrefix.value.trim() || '';
+      if (prefix && !/^[^_#@=+~-]+[_#@=+~-]$/.test(prefix)) {
+        prefix = prefix + '_';
+      }
+      return prefix;
+    }
+    const getImageLabel = () => {
+      let label = imageLabel.value.trim() || '';
+      if (label && !/^[_#@=+~-].+$/.test(label)) {
+        label = '_' + label;
+      }
+      return label;
+    }
+    const createImageName = uuid => `${getImagePrefix()}${uuid}${getImageLabel()}`;
+    const updateImageNameExample = () => {
+      imageNameExample.value = `${getImagePrefix()}500fea37-83da-4b54-86d6-b72d37bcb0b8${getImageLabel()}.png`;
+    };
+    updateImageNameExample();
+
     const clearImageLabelValidation = () => imageLabel.classList.remove('is-invalid');
-    imageLabel.addEventListener('change', clearImageLabelValidation);
-    imageLabel.addEventListener('keyup', clearImageLabelValidation);
+
+    imageLabel.addEventListener('change', () => {
+      clearImageLabelValidation();
+      updateImageNameExample();
+    });
+    imageLabel.addEventListener('keyup', () => {
+      clearImageLabelValidation();
+      updateImageNameExample();
+    });
+
+    imagePrefix.addEventListener('change', () => {
+      updateImageNameExample();
+    });
+    imagePrefix.addEventListener('keyup', () => {
+      updateImageNameExample();
+    });
+
     captureInterval.addEventListener('change', updateCurrentCaptureInterval);
     startSessionButton.addEventListener('click', startStopSession);
     clearSessionButton.addEventListener('click', clearSession);
