@@ -205,7 +205,7 @@
     }
     const MIN_INTERVAL_IN_SECONDS = 0.25;
     function startSession() {
-      const currentCaptureInterval = Math.max(MIN_INTERVAL_IN_SECONDS, parseInt(currentCaptureIntervalRange.value) || MIN_INTERVAL_IN_SECONDS) * 1000;
+      const currentCaptureInterval = Math.max(MIN_INTERVAL_IN_SECONDS, parseFloat(currentCaptureIntervalRange.value) || MIN_INTERVAL_IN_SECONDS) * 1000;
       photoSessionIntervalHandler && clearInterval(photoSessionIntervalHandler);
       photoSessionIntervalHandler = setInterval(() => {
         try {
@@ -247,10 +247,11 @@
     const spacebarForPhotoCheck = document.getElementById('spacebar-for-photo-check');
     const photoOutput = document.getElementById('photo-output');
     const imageLabel = document.getElementById('image-label');
-    const currentCaptureIntervalRange = document.getElementById('current-capture-interval');
+    const currentCaptureIntervalRange = document.getElementById('capture-interval');
+    const currentCaptureIntervalView = document.getElementById('current-capture-interval');
     const numberOfPhotosSpan = document.getElementById('number-of-photos');
     const captureInterval = document.getElementById('capture-interval');
-    const updateCurrentCaptureInterval = () => (currentCaptureIntervalRange.innerHTML = `${captureInterval.value}(s)`);
+    const updateCurrentCaptureInterval = () => (currentCaptureIntervalView.innerHTML = `${captureInterval.value}(s)`);
     updateCurrentCaptureInterval();
 
     const clearImageLabelValidation = () => imageLabel.classList.remove('is-invalid');
