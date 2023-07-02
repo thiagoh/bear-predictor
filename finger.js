@@ -43,7 +43,7 @@
 
     const submit = (dataAsUrl) => {
       const http = new XMLHttpRequest();
-      http.open('POST', 'https://thiagoh-test.hf.space/predict-finger');
+      http.open('POST', 'https://thiagoh-simple-predictor.hf.space/predict-finger');
       http.setRequestHeader('Content-type', 'application/json');
       http.onreadystatechange = function () {
         //Call a function when the state changes.
