@@ -47,7 +47,7 @@
       http.setRequestHeader('Content-type', 'application/json');
       http.onreadystatechange = function () {
         //Call a function when the state changes.
-        if (http.readyState === XMLHttpRequest.LOADING) {
+        if (http.readyState === XMLHttpRequest.OPENED || http.readyState === XMLHttpRequest.LOADING) {
           console.log('LOADING', http);
           bearTypeOutput.innerHTML = 'Loading...';
         } else if (http.readyState === XMLHttpRequest.DONE && http.status == 200) {
