@@ -29,10 +29,15 @@
     let fileData;
     inputImageFile.addEventListener('change', () => {
       console.log('files:', inputImageFile.files[0]);
-      getDataUrl(inputImageFile.files[0]).then((data) => {
-        console.log('File data: ', data);
-        fileData = data;
-      });
+      getDataUrl(inputImageFile.files[0])
+        .then((data) => {
+          console.log('File data: ', data);
+          fileData = data;
+          return data;
+        })
+        .then((data) => {
+          submit(data);
+        });
     });
     btn.addEventListener('click', () => submit(fileData));
 
@@ -42,8 +47,11 @@
       http.setRequestHeader('Content-type', 'application/json');
       http.onreadystatechange = function () {
         //Call a function when the state changes.
-        if (http.readyState === XMLHttpRequest.DONE && http.status == 200) {
-          console.log(http);
+        if (http.readyState === XMLHttpRequest.LOADING) {
+          console.log('LOADING', http);
+          bearTypeOutput.innerHTML = 'Loading...';
+        } else if (http.readyState === XMLHttpRequest.DONE && http.status == 200) {
+          console.log('DONE', http);
           const data = JSON.parse(http.responseText);
           // imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
           imgOutput.src = dataAsUrl;
@@ -51,7 +59,7 @@
         }
       };
       const len = 'base64,'.length;
-      const bytes = dataAsUrl.substring(dataAsUrl.indexOf('base64,') + len)
+      const bytes = dataAsUrl.substring(dataAsUrl.indexOf('base64,') + len);
       http.send(JSON.stringify({ imageEncodedBytes: bytes }));
     };
   });
