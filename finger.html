@@ -24,6 +24,7 @@
     }
   </style>
 
+  <script src="webcam-widget.js"></script>
   <script src="finger.js"></script>
 </head>
 
@@ -45,22 +46,24 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row mb-3">
     <div class="col">
       <input type="button" id="button-submit" class="btn btn-secondary" value="Submit" />
     </div>
   </div>
 
-  <div class="row">
-    <div class="row">
-      <div id="div-bear-type" class="col"></div>
-    </div>
-    <div class="row">
-      <div id="div-image-output" class="col">
-        <img id="img-output" />
-      </div>
+  <div class="row mb-3">
+    <div id="camera" class="col"></div>
+  </div>
+  <div class="row mb-3">
+    <div id="div-finger-type" class="col"></div>
+  </div>
+  <div class="row mb-3">
+    <div id="div-image-output" class="col">
+      <img id="img-output" />
     </div>
   </div>
+
 </body>
 
 </html>

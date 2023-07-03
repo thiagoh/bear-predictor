@@ -1,6 +1,6 @@
 (() => {
-  function createWebcam({ parent, width = 320, height }) {
-    function initWebcam() {
+  function createWebcam({ parent, width = 320, height, events: { photoTaken } = {} }) {
+    function init() {
       let lastPhotoTaken;
       const widget = document.createElement('div');
       widget.innerHTML = `
@@ -36,6 +36,7 @@
         canvas.height = height;
         context.drawImage(video, 0, 0, width, height);
         lastPhotoTaken = canvas.toDataURL('image/png');
+        photoTaken(lastPhotoTaken);
         return lastPhotoTaken;
       }
 
@@ -116,7 +117,7 @@
       throw Error('getUserMedia() is not supported in your browser');
     }
 
-    return initWebcam();
+    return init();
   }
 
   function downloadAllPhotos() {
@@ -125,7 +126,5 @@
     });
   }
 
-  window.WebcamWidget = {
-    createWebcam,
-  };
+  window.WebcamWidget = { createWebcam };
 })();
