@@ -58,6 +58,7 @@
     btn.addEventListener('click', () => submit(fileData));
 
     const submit = (dataAsUrl) => {
+      imgOutput.src = dataAsUrl;
       const http = new XMLHttpRequest();
       http.open('POST', 'https://thiagoh-simple-predictor.hf.space/predict-finger');
       http.setRequestHeader('Content-type', 'application/json');
@@ -68,10 +69,8 @@
           fingerTpeOutput.innerHTML = 'Loading...';
         } else if (http.readyState === XMLHttpRequest.DONE && http.status == 200) {
           console.log('DONE', http);
-          const data = JSON.parse(http.responseText);
-          // imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
-          // imgOutput.src = dataAsUrl;
-          fingerTpeOutput.innerHTML = `Type is ${data.prediction} with confidence ${data.probability}`;
+          const predictionData = JSON.parse(http.responseText);
+          fingerTpeOutput.innerHTML = `Type is ${predictionData.prediction} with confidence ${predictionData.probability}`;
         }
       };
       const len = 'base64,'.length;
