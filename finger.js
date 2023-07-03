@@ -33,6 +33,10 @@
       },
     });
 
+    // setInterval(() => {
+    //   webcamWidget.takePhoto();
+    // }, 2000);
+
     const btn = document.getElementById('button-submit');
     const inputImageUrl = document.getElementById('image-url');
     const inputImageFile = document.getElementById('image-file');
@@ -66,7 +70,7 @@
           console.log('DONE', http);
           const data = JSON.parse(http.responseText);
           // imgOutput.src = 'data:image/png;base64,' + data.imageEncodedBytes;
-          imgOutput.src = dataAsUrl;
+          // imgOutput.src = dataAsUrl;
           fingerTpeOutput.innerHTML = `Type is ${data.prediction} with confidence ${data.probability}`;
         }
       };

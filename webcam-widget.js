@@ -25,7 +25,7 @@
       // format data URL. By drawing it on an offscreen canvas and then
       // drawing that to the screen, we can change its size and/or apply
       // other changes before drawing it.
-      function _takeNewPhoto() {
+      function _takePhoto() {
         const context = canvas.getContext('2d');
         if (!width || !height) {
           _clearPhoto();
@@ -96,7 +96,7 @@
         false,
       );
 
-      button.addEventListener('click', _takeNewPhoto);
+      button.addEventListener('click', _takePhoto);
 
       _clearPhoto({ video, canvas });
 
@@ -104,8 +104,8 @@
         this.getLastPhoto = function getLastPhoto() {
           return lastPhotoTaken;
         };
-        this.takeNewPhoto = function takeNewPhoto() {
-          return _takeNewPhoto();
+        this.takePhoto = function takePhoto() {
+          return _takePhoto();
         };
       }
       return new WebcamWidget();
