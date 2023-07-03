@@ -6,8 +6,8 @@
       widget.innerHTML = `
   <div style="display:flex;">
       <div style="flex: 1; margin-right: 20px;">
-        <video style="display:inline-block;" autoplay muted playsinline>Video stream not available.</video>
-        <button style="display: block;position:relative;margin-left:auto;margin-right:auto;bottom:32px;background-color:rgba(0, 150, 0, 0.7); border:1px solid rgba(255, 255, 255, 0.7); box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.2);font-size:14px;font-family:"Lucida Grande","Arial",sans-serif;color:rgba(255,255,255,1);">Take photo</button>
+        <video style="display:flex;margin-left:auto;margin-right:auto;" autoplay muted playsinline>Video stream not available.</video>
+        <button style="display:flex;position:relative;margin-left:auto;margin-right:auto;bottom:32px;background-color:rgba(0, 150, 0, 0.7); border:1px solid rgba(255, 255, 255, 0.7); box-shadow: 0px 0px 1px 2px rgba(0, 0, 0, 0.2);font-size:14px;font-family:"Lucida Grande","Arial",sans-serif;color:rgba(255,255,255,1);">Take photo</button>
       </div>
       <div style="flex: 1;">
         <canvas></canvas>
